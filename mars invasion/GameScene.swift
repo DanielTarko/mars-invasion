@@ -6,6 +6,8 @@
 //  Copyright © 2018 Tarko Games. All rights reserved.
 //
 
+
+//fix the alien that appears randomly
 import SpriteKit
 import GameplayKit
 
@@ -27,16 +29,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let bullet = SKSpriteNode()
     let bulletNumber = 0
     
+    var gameOver = false
+    
     let alien = SKSpriteNode(imageNamed: "alien.png")
     var alienNumber = 1
+    var number1 = 0
+    var number2 = 0
     let alienTexture = SKTexture(imageNamed: "alien.png")
     let saucerTexture = SKTexture(imageNamed: "saucer.png")
+    
+    let scoreNode = SKLabelNode(fontNamed: "Press Start")
+    let loseNode = SKLabelNode(fontNamed: "Press Start")
+    let playAgainButton = SKLabelNode(fontNamed: "Press Start")
     
     var direction = "right"
     
     lazy var analogJoystick: AnalogJoystick = {
-        let js = AnalogJoystick(diameter: 100, colors: (UIColor(red:0.70, green:0.70, blue:0.70, alpha:0.75), UIColor(red:0.33, green:0.33, blue:0.33, alpha:0.75)))
-        js.position = CGPoint(x: self.frame.width/2 - js.radius - 20, y: 0)
+        let js = AnalogJoystick(diameter: 75, colors: (UIColor(red:0.70, green:0.70, blue:0.70, alpha:0.75), UIColor(red:0.33, green:0.33, blue:0.33, alpha:0.75)))
+        js.position = CGPoint(x: self.frame.width/2 - js.radius - 30, y: -220 + js.radius + 40)
+        print(self.frame.height)
+        print(js.position)
         js.zPosition = 3.0
         return js
     }()
@@ -46,11 +58,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let alienCategory: UInt32 = 0x1 << 2
     let wallsCategory: UInt32 = 0x1 << 3
 
+    var score = 0
   
     override func didMove(to view: SKView) {
         
         self.physicsWorld.contactDelegate = self
-        self.physicsWorld.gravity = CGVector(dx:0, dy:-6)
+        self.physicsWorld.gravity = CGVector(dx:0, dy:-5)
 
 
         actionAL = SKAction.setTexture(astronautL, resize: true)
@@ -77,13 +90,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         setupJoystick()
         
-        let wait = SKAction.wait(forDuration: 2, withRange: 2)
+        let wait = SKAction.wait(forDuration: 1, withRange: 1)
         let spawn = SKAction.run {
             self.createAlien()
         }
         
         let spawning = SKAction.sequence([wait,spawn])
         self.run(SKAction.repeatForever(spawning))
+        
+        scoreNode.fontSize = 60
+        scoreNode.position = CGPoint(x: 0, y: 100)
+        scoreNode.fontColor = SKColor(red: 255, green: 190, blue: 0, alpha:0.5)
+        scoreNode.text = "\(score)"
+        scoreNode.zPosition = 0.5
+        self.addChild(scoreNode)
+
+        loseNode.fontSize = 80
+        loseNode.position = CGPoint(x: 0, y: 0)
+        loseNode.fontColor = SKColor(red: 0, green: 0, blue: 0, alpha:1.0)
+        loseNode.text = "GAME OVER"
+        loseNode.zPosition = 10
+        
+        playAgainButton.fontSize = 40
+        playAgainButton.position = CGPoint(x: 0, y: -100)
+        playAgainButton.fontColor = SKColor(red: 0, green: 0, blue: 0, alpha:1.0)
+        playAgainButton.text = "play agian"
+        playAgainButton.zPosition = 10
         
         let border = SKPhysicsBody(edgeLoopFrom: self.frame)
         border.friction = 0
@@ -92,7 +124,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         border.collisionBitMask = astronautCategory
         self.physicsBody = border
         
-        let bottomLeftCorner = CGPoint(x: -self.frame.width/2, y: -140)
+        let bottomLeftCorner = CGPoint(x: -self.frame.width/2, y: astronaut.position.y - 52)
         let bottomRightCorner =  CGPoint(x: self.frame.width/2, y: -140)
         let bottomBorder = SKPhysicsBody(edgeFrom: bottomLeftCorner, to: bottomRightCorner)
         let bottomBorderNode = SKNode()
@@ -112,13 +144,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.gun.zRotation = data.angular+1.6
         }
     }
+    //why you no work????
+    func delay(_ delay:Double, closure:@escaping ()->()) {
+        DispatchQueue.main.asyncAfter(
+            deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
+    }
+    //no work?????
+    func addScore(value : Int){
+        for i in score...score+value{
+            scoreNode.text = "\(i)"
+            delay(0.2, closure: {})
+        }
+        score = score+value
+        print(score)
+    }
     
     func flipL(){
         astronaut.run(actionAL)
         gun.run(actionGL)
         gun.anchorPoint = CGPoint(x: 0.75, y: 0.5)
-        print("L")
-        print(gun.zRotation)
+        
         analogJoystick.trackingHandler = { [unowned self] data in
             self.gun.zRotation = data.angular+4.7
         }
@@ -132,8 +177,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         astronaut.run(actionAR)
         gun.run(actionGR)
         gun.anchorPoint = CGPoint(x: 0.25, y: 0.5)
-        print("R")
-        print(gun.zRotation)
+        
         analogJoystick.trackingHandler = { [unowned self] data in
             self.gun.zRotation = data.angular+1.6
             
@@ -156,26 +200,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func createAlien(){
         let alien = SKSpriteNode(imageNamed: "alien.png")
-
-        let number1 = Int(arc4random_uniform(2))
-        let number2 = Int(arc4random_uniform(2))
-        if number1 == 0{
-            alien.run(actionS)
-            if number2 == 0{
-                alien.position = CGPoint(x: self.frame.width/2 + 126, y: 85)
-            }
-            else {
-                alien.position = CGPoint(x: -self.frame.width/2 - 126, y: 85)
-            }
-            alien.physicsBody = SKPhysicsBody(texture: saucerTexture,
-                                              size: CGSize(width: alien.size.width,
-                                                           height: alien.size.height))
-            let moveX = SKAction.moveTo(x: astronaut.position.x, duration: 5)
-            let moveY = SKAction.moveTo(y: astronaut.position.y, duration: 5)
-            alien.run(moveX)
-            alien.run(moveY)
+        
+        if alienNumber < 10 {
+            number1 = Int(arc4random_uniform(1))
+            number2 = Int(arc4random_uniform(2))
+        }else{
+            number1 = Int(arc4random_uniform(5))
+            number2 = Int(arc4random_uniform(2))
         }
-        else if number1 == 1{
+        
+        if number1 < 3{
             if number2 == 0{
                 alien.position = CGPoint(x: self.frame.width/2 + 96, y: -85)
             }
@@ -186,9 +220,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                                                size: CGSize(width: alien.size.width,
                                                             height: alien.size.height))
             
-            let move = SKAction.moveTo(x: astronaut.position.x, duration: 3)
+            let move = SKAction.moveTo(x: astronaut.position.x, duration: TimeInterval(4))
             alien.run(move)
         }
+        else if number1 == 4{
+            alien.run(actionS)
+            if number2 == 0{
+                alien.position = CGPoint(x: self.frame.width/2 + 126, y: 85)
+            }
+            else {
+                alien.position = CGPoint(x: -self.frame.width/2 - 126, y: 85)
+            }
+            alien.physicsBody = SKPhysicsBody(texture: saucerTexture,
+                                              size: CGSize(width: alien.size.width,
+                                                           height: alien.size.height))
+            let moveX = SKAction.moveTo(x: astronaut.position.x, duration: TimeInterval(6))
+            let moveY = SKAction.moveTo(y: astronaut.position.y, duration: TimeInterval(6))
+            alien.run(moveX)
+            alien.run(moveY)
+        }
+        
         alien.name = "alien"+String(alienNumber)
         alien.zPosition = 1.0
         alien.physicsBody?.isDynamic = true
@@ -198,78 +249,81 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         alien.physicsBody?.contactTestBitMask =  bulletCategory | astronautCategory
         alien.physicsBody?.collisionBitMask =  bulletCategory | astronautCategory
         self.addChild(alien)
+        alienNumber += 1
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
         
         let bodyA = contact.bodyA.node!
         let bodyB = contact.bodyB.node!
-        if contact.bodyA.categoryBitMask == bulletCategory || contact.bodyB.categoryBitMask == bulletCategory{
+
+        if  bodyA.parent != nil && bodyB.parent != nil && (contact.bodyA.categoryBitMask == bulletCategory || contact.bodyB.categoryBitMask == bulletCategory){
+            
+            addScore(value: 10)//please work soon
+    
             bodyA.removeFromParent()
             bodyB.removeFromParent()
-            print("bullet hit")
         }
-        if (contact.bodyA.node?.name == "astronaut" || contact.bodyB.node?.name == "astronaut") &&
+        if bodyA.parent != nil && (contact.bodyA.node?.name == "astronaut" || contact.bodyB.node?.name == "astronaut") &&
             (contact.bodyA.categoryBitMask == alienCategory || contact.bodyB.categoryBitMask == alienCategory){
+            gameOver = true
             astronaut.removeFromParent()
             gun.removeFromParent()
-            print("astronaut contact")
+            analogJoystick.removeFromParent()
             
+            self.addChild(loseNode)
+            self.addChild(playAgainButton)
         }
-        print("A:")
-        print(String(describing: contact.bodyA.node?.name))
-        print("B:")
-        print(String(describing: contact.bodyB.node?.name))
-        
+    }
 
-    }
-    
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        let bullet = SKSpriteNode()
-        bullet.size = CGSize(width: 15, height: 5)
-        bullet.position = CGPoint(x: gun.position.x, y: gun.position.y)
-        bullet.color = SKColor.black
-        bullet.name = "bullet"+String(bulletNumber)
-        bullet.physicsBody = SKPhysicsBody(rectangleOf: bullet.frame.size)
-        bullet.physicsBody?.isDynamic = true
-        bullet.physicsBody?.allowsRotation = false
-        bullet.physicsBody?.affectedByGravity = false
-        bullet.physicsBody?.angularDamping = 0
-        bullet.physicsBody?.linearDamping = 0
-        bullet.zPosition = 4.0
-        bullet.zRotation = gun.zRotation
-        bullet.physicsBody?.categoryBitMask =  bulletCategory
-        bullet.physicsBody?.contactTestBitMask =  alienCategory
-        bullet.physicsBody?.collisionBitMask =  alienCategory
-        self.addChild(bullet)
-        if direction == "right"{
-        bullet.run(SKAction.moveTo(x: bullet.position.x + cos(bullet.zRotation) * 1000, duration: 2))
-        bullet.run(SKAction.moveTo(y:bullet.position.y + sin(bullet.zRotation) * 1000, duration: 2))
-            astronaut.physicsBody?.applyForce(CGVector(dx: -cos(gun.zRotation)*1500,
-                                                       dy: -sin(gun.zRotation)*1500))
+        if gameOver == false{
+            let bullet = SKSpriteNode()
+            bullet.size = CGSize(width: 15, height: 5)
+            bullet.position = CGPoint(x: gun.position.x, y: gun.position.y)
+            bullet.color = SKColor.black
+            bullet.name = "bullet"+String(bulletNumber)
+            bullet.physicsBody = SKPhysicsBody(rectangleOf: bullet.frame.size)
+            bullet.physicsBody?.isDynamic = true
+            bullet.physicsBody?.allowsRotation = false
+            bullet.physicsBody?.affectedByGravity = false
+            bullet.physicsBody?.angularDamping = 0
+            bullet.physicsBody?.linearDamping = 0
+            bullet.zPosition = 4.0
+            bullet.zRotation = gun.zRotation
+            bullet.physicsBody?.categoryBitMask =  bulletCategory
+            bullet.physicsBody?.contactTestBitMask =  alienCategory
+            bullet.physicsBody?.collisionBitMask =  alienCategory
+            self.addChild(bullet)
+            if direction == "right"{
+            bullet.run(SKAction.moveTo(x: bullet.position.x + cos(bullet.zRotation) * 1000, duration: 2))
+            bullet.run(SKAction.moveTo(y:bullet.position.y + sin(bullet.zRotation) * 1000, duration: 2))
+                astronaut.physicsBody?.applyForce(CGVector(dx: -cos(gun.zRotation)*1500,
+                                                           dy: -sin(gun.zRotation)*1500))
+            }
+            else{
+                bullet.run(SKAction.moveTo(x: bullet.position.x + -cos(bullet.zRotation) * 1000, duration: 2))
+                bullet.run(SKAction.moveTo(y:bullet.position.y + -sin(bullet.zRotation) * 1000, duration: 2))
+                astronaut.physicsBody?.applyForce(CGVector(dx: cos(gun.zRotation)*1500,
+                                                           dy: sin(gun.zRotation)*1500))
+            }
         }
-        else{
-            bullet.run(SKAction.moveTo(x: bullet.position.x + -cos(bullet.zRotation) * 1000, duration: 2))
-            bullet.run(SKAction.moveTo(y:bullet.position.y + -sin(bullet.zRotation) * 1000, duration: 2))
-            astronaut.physicsBody?.applyForce(CGVector(dx: cos(gun.zRotation)*1500,
-                                                       dy: sin(gun.zRotation)*1500))
+        for touch in touches{
+            let location = touch.location(in: self)
+            if playAgainButton.contains(location) && gameOver == true{
+                if let newScene = GameScene(fileNamed: "GameScene"){
+                    newScene.scaleMode = self.scaleMode
+                    view?.presentScene(newScene)
+                }
+                gameOver = false
+            }
         }
-       
-        print(gun.zRotation)
-    }
+}
     
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-    }
-    
-   
     override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
         if self.gun.zRotation > 1.7 && self.gun.zRotation < 4.7 && direction == "right"{
            flipL()
             direction = "left"
-            //gun.zRotation = gun.zRotation+3.1
         }
         else if self.gun.zRotation > 1.5 && self.gun.zRotation < 4.7  && direction == "left" {
             flipR()

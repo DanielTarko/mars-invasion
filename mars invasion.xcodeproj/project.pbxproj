@@ -18,6 +18,7 @@
 		CF35EA212110B4A800AB5B6E /* mars_invasionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF35EA202110B4A800AB5B6E /* mars_invasionTests.swift */; };
 		CF35EA2C2110B4A800AB5B6E /* mars_invasionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF35EA2B2110B4A800AB5B6E /* mars_invasionUITests.swift */; };
 		CF35EA3A2110D6E500AB5B6E /* joystickLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF35EA392110D6E500AB5B6E /* joystickLibrary.swift */; };
+		CF35EA3D2113B82100AB5B6E /* press-start.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CF35EA3C2113B82100AB5B6E /* press-start.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		CF35EA2B2110B4A800AB5B6E /* mars_invasionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mars_invasionUITests.swift; sourceTree = "<group>"; };
 		CF35EA2D2110B4A800AB5B6E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CF35EA392110D6E500AB5B6E /* joystickLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = joystickLibrary.swift; sourceTree = "<group>"; };
+		CF35EA3C2113B82100AB5B6E /* press-start.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "press-start.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,6 +87,7 @@
 		CF35E9F92110B4A700AB5B6E = {
 			isa = PBXGroup;
 			children = (
+				CF35EA3B2113B7E700AB5B6E /* Fonts */,
 				CF35EA042110B4A700AB5B6E /* mars invasion */,
 				CF35EA1F2110B4A800AB5B6E /* mars invasionTests */,
 				CF35EA2A2110B4A800AB5B6E /* mars invasionUITests */,
@@ -135,6 +138,14 @@
 				CF35EA2D2110B4A800AB5B6E /* Info.plist */,
 			);
 			path = "mars invasionUITests";
+			sourceTree = "<group>";
+		};
+		CF35EA3B2113B7E700AB5B6E /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				CF35EA3C2113B82100AB5B6E /* press-start.ttf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -245,6 +256,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF35EA112110B4A700AB5B6E /* Main.storyboard in Resources */,
+				CF35EA3D2113B82100AB5B6E /* press-start.ttf in Resources */,
 				CF35EA082110B4A700AB5B6E /* GameScene.sks in Resources */,
 				CF35EA132110B4A700AB5B6E /* Assets.xcassets in Resources */,
 				CF35EA162110B4A700AB5B6E /* LaunchScreen.storyboard in Resources */,
