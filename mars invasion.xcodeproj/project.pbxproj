@@ -17,6 +17,7 @@
 		CF35EA162110B4A700AB5B6E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CF35EA142110B4A700AB5B6E /* LaunchScreen.storyboard */; };
 		CF35EA212110B4A800AB5B6E /* mars_invasionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF35EA202110B4A800AB5B6E /* mars_invasionTests.swift */; };
 		CF35EA2C2110B4A800AB5B6E /* mars_invasionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF35EA2B2110B4A800AB5B6E /* mars_invasionUITests.swift */; };
+		CF35EA3A2110D6E500AB5B6E /* joystickLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF35EA392110D6E500AB5B6E /* joystickLibrary.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,7 @@
 		CF35EA272110B4A800AB5B6E /* mars invasionUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "mars invasionUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF35EA2B2110B4A800AB5B6E /* mars_invasionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mars_invasionUITests.swift; sourceTree = "<group>"; };
 		CF35EA2D2110B4A800AB5B6E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CF35EA392110D6E500AB5B6E /* joystickLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = joystickLibrary.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 		CF35EA042110B4A700AB5B6E /* mars invasion */ = {
 			isa = PBXGroup;
 			children = (
+				CF35EA392110D6E500AB5B6E /* joystickLibrary.swift */,
 				CF35EA052110B4A700AB5B6E /* AppDelegate.swift */,
 				CF35EA072110B4A700AB5B6E /* GameScene.sks */,
 				CF35EA092110B4A700AB5B6E /* Actions.sks */,
@@ -271,6 +274,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CF35EA0C2110B4A700AB5B6E /* GameScene.swift in Sources */,
+				CF35EA3A2110D6E500AB5B6E /* joystickLibrary.swift in Sources */,
 				CF35EA0E2110B4A700AB5B6E /* GameViewController.swift in Sources */,
 				CF35EA062110B4A700AB5B6E /* AppDelegate.swift in Sources */,
 			);
@@ -439,6 +443,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HRXGY63Y6S;
 				INFOPLIST_FILE = "mars invasion/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "TG.mars-invasion";
@@ -453,6 +458,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HRXGY63Y6S;
 				INFOPLIST_FILE = "mars invasion/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "TG.mars-invasion";
