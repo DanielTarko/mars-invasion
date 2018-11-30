@@ -7,7 +7,6 @@
 //
 
 
-//fix the alien that appears randomly
 import SpriteKit
 import GameplayKit
 
@@ -144,12 +143,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.gun.zRotation = data.angular+1.6
         }
     }
-    //why you no work????
+
     func delay(_ delay:Double, closure:@escaping ()->()) {
         DispatchQueue.main.asyncAfter(
             deadline: DispatchTime.now() + Double(Int64(delay * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC), execute: closure)
     }
-    //no work?????
+
     func addScore(value : Int){
         for i in score...score+value{
             scoreNode.text = "\(i)"
